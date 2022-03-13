@@ -17,8 +17,4 @@
     <ProjectReference Include="..\fakeLook-models\fakeLook-models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
