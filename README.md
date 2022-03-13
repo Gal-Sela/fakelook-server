@@ -30,6 +30,6 @@
 13. enter fakelook-server as repository name
 14. select public repository and click create repository
 15. open the project folder in the terminal
-16. run `$ git remote set-url origin <new-repo-url> to change the origin url from the clone source to our new repo's one
+16. run `$ git remote set-url origin <new-repo-url>` to change the origin url from the clone source to our new repo's one
 17. run `$ git branch -M main` to change our main branch to main
 18. run `$ git push -u origin main` to push our cloned code to the remote repository
