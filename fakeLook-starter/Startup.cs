@@ -35,6 +35,7 @@ namespace fakeLook_starter
             #region Setting repository and sfervices interfaces
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
