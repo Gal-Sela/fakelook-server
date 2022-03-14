@@ -8,6 +8,7 @@ namespace fakeLook_starter.Interfaces
 {
     public interface IRepository<T>
     {
+        //public T Add(T item);
         public Task<T> Add(T item);
         public ICollection<T> GetAll();
         public Task<T> Edit(T item);
