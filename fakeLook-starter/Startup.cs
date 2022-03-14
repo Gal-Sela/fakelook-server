@@ -75,6 +75,8 @@ namespace fakeLook_starter
 
             app.UseAuthorization();
 
+            app.UseCors(_MyAllowSpecificOrigin);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
