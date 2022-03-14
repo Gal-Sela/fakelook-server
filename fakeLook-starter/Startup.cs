@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
+using fakeLook_starter.Services;
 
 namespace fakeLook_starter
 {
@@ -36,6 +37,7 @@ namespace fakeLook_starter
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddTransient<ITokenService, TokenService>();
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -68,7 +70,7 @@ namespace fakeLook_starter
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseRouting();
 
             app.UseAuthorization();

@@ -16,9 +16,11 @@ namespace fakeLook_starter.Repositories
             _context = context;
         }
 
-        public Task<User> Add(User item)
+        public async Task<User> Add(User item)
         {
-            throw new NotImplementedException();
+            var res = _context.Users.Add(item);
+            await _context.SaveChangesAsync();
+            return res.Entity;
         }
 
         public Task<User> Edit(User item)
@@ -35,6 +37,12 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Users.SingleOrDefault(p => p.Id == id);
         }
+
+        public User GetByEmailAndPassword(string email, string password)
+        {
+            return _context.Users.SingleOrDefault(p => p.Email == email && p.Password==password);
+        }
+
 
         public ICollection<User> GetByPredicate(Func<User, bool> predicate)
         {
