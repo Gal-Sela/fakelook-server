@@ -1,7 +1,9 @@
-﻿using fakeLook_starter.Interfaces;
+﻿using fakeLook_models.Models;
+using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,8 +36,12 @@ namespace fakeLook_starter.Controllers
 
         // POST api/<PostController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
+        [Route("Add")]
+        public async Task<JsonResult> Post([FromBody] Post post)
+        {      
+                
+                return new JsonResult(await _repository.Add(post));
+
         }
 
         // PUT api/<PostController>/5
