@@ -37,6 +37,12 @@ namespace fakeLook_starter.Controllers
         public void Post([FromBody] string value)
         {
         }
+        [HttpGet]
+        [Route("FilterByPublisher")]
+        public JsonResult FilterByPublisher([FromBody] int id)
+        {
+            return new JsonResult(_repository.FilterByPublisher(id));
+        }
 
         // PUT api/<PostController>/5
         [HttpPut("{id}")]

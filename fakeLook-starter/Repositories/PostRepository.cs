@@ -30,6 +30,11 @@ namespace fakeLook_starter.Repositories
             return res.Entity;
         }
 
+        public ICollection<Post> FilterByPublisher(int id)
+        {
+            return _context.Posts.Where(p=>p.UserId == id).ToList();
+        }
+
         public ICollection<Post> GetAll()
         {
             return _context.Posts.ToList();
