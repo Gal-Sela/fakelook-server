@@ -15,9 +15,6 @@ namespace fakeLook_starter.Interfaces
         public T GetById(int id);
         public ICollection<T> GetByPredicate(Func<T, bool> predicate);
     }
-
-    public interface IPostRepository : IRepository<Post>
-    {
-
-    }
 }
+
+  
