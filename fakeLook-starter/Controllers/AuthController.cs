@@ -30,7 +30,7 @@ namespace fakeLook_starter.Controllers
             var currentUser = _repository.GetByEmailAndPassword(user.Email,user.Password);
             if (currentUser == null) return Problem("user not in system");
             var token = _tokenService.CreateToken(currentUser);
-            return Ok(new { token });
+            return Ok(new AuthResponse (){Token=token, Id=currentUser.Id });
         }
 
 
@@ -41,7 +41,7 @@ namespace fakeLook_starter.Controllers
             //TODO: check if user already exist
             var currentUser = await _repository.Add(user);
             var token = _tokenService.CreateToken(currentUser);
-            return Ok(new { token });
+            return Ok(new AuthResponse() { Token = token, Id = currentUser.Id });
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using fakeLook_models.Models;
+using fakeLook_starter.Filters;
 using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,13 +37,22 @@ namespace fakeLook_starter.Controllers
         //}
 
         // POST api/<PostController>
+      
         [HttpPost]
         [Route("Add")]
+        [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Post([FromBody] Post post)
-        {      
-                
-                return new JsonResult(await _repository.Add(post));
+        {
+            var dbPost = await _repository.Add(post);
+            var dtoPost = new Post() {Id = dbPost.Id};
+                return new JsonResult(dtoPost);
 
+        }
+        [HttpGet]
+        [Route("FilterByPublisher")]
+        public JsonResult FilterByPublisher([FromBody] int id)
+        {
+            return new JsonResult(_repository.FilterByPublisher(id));
         }
 
         // PUT api/<PostController>/5

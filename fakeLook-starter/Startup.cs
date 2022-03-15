@@ -20,7 +20,7 @@ namespace fakeLook_starter
 {
     public class Startup
     {
-        private readonly string _MyAllowSpecificOrigin = "myAlloworigin";
+        private readonly string _MyAllowSpecificOrigin = "http://localhost:4200";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
