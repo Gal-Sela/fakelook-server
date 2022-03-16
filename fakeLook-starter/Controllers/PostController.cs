@@ -28,6 +28,14 @@ namespace fakeLook_starter.Controllers
             // return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetById(id));
         }
+        [HttpGet]
+        [Route("GetAll")]
+        public JsonResult GetAll()
+        {
+            // return new string[] { "value1", "value2" };
+            return new JsonResult(_repository.GetAll());
+        }
+
 
         //// GET api/<PostController>/5
         //[HttpGet("{id}")]
@@ -37,7 +45,7 @@ namespace fakeLook_starter.Controllers
         //}
 
         // POST api/<PostController>
-      
+
         [HttpPost]
         [Route("Add")]
         [TypeFilter(typeof(GetUserActionFilter))]
@@ -48,7 +56,7 @@ namespace fakeLook_starter.Controllers
                 return new JsonResult(dtoPost);
 
         }
-        [HttpGet]
+        [HttpPost]
         [Route("FilterByPublisher")]
         public JsonResult FilterByPublisher([FromBody] int id)
         {
@@ -66,5 +74,16 @@ namespace fakeLook_starter.Controllers
         public void Delete(int id)
         {
         }
+
+       
+        //public async Task<JsonResult> Filter(Filter filter)
+        //{
+        //    var res = _repository.GetByPredicate(post => {
+
+
+
+
+        //    });
+        //}
     }
 }
