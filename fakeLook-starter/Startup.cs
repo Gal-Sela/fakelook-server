@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
 using fakeLook_starter.Services;
+using System.Text.Json.Serialization;
 
 namespace fakeLook_starter
 {
@@ -34,10 +35,15 @@ namespace fakeLook_starter
 
             services.AddControllers();
             #region Setting repository and sfervices interfaces
-            services.AddTransient<IPostRepository, PostRepository>();
+           // services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IDtoConverter, DtoConverter>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
