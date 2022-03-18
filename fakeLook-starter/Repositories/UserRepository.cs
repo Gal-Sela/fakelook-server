@@ -48,5 +48,10 @@ namespace fakeLook_starter.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<User> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

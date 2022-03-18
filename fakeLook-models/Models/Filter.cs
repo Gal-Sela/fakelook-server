@@ -11,7 +11,6 @@ namespace fakeLook_models.Models
         public ICollection<string> Publishers { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public double Radius { get; set; }
         public ICollection<string> Tags { get; set; }
         public ICollection<string> UsersTaggedInPostId { get; set; }
 
