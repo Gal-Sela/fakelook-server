@@ -20,6 +20,37 @@ namespace fakeLook_starter.Repositories
             _dtoConverter = dtoConverter;
         }
 
+        private Post dtoLogic(Post p)
+        {
+            var dtoPost = _dtoConverter.DtoPost(p);
+            dtoPost.User = _dtoConverter.DtoUser(p.User);
+            dtoPost.Comments = p.Comments.Select(c =>
+            {
+                var dtoComment = _dtoConverter.DtoComment(c);
+                dtoComment.User = _dtoConverter.DtoUser(c.User);
+                return dtoComment;
+            }).ToList();
+            dtoPost.Likes = p.Likes.Select(l =>
+            {
+                var dtoLike = _dtoConverter.DtoLike(l);
+                dtoLike.User = _dtoConverter.DtoUser(l.User);
+                return dtoLike;
+            }).ToList();
+            dtoPost.Tags = p.Tags.Select(t =>
+            {
+                var dtoTag = _dtoConverter.DtoTag(t);
+
+                return dtoTag;
+            }).ToList();
+            dtoPost.UserTaggedPost = p.UserTaggedPost.Select(t =>
+            {
+                var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
+                dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
+                return dtoTaggedPost;
+            }).ToList();
+            return dtoPost;
+        }
+
         public async Task<Post> Add(Post item)
         {
             var res = _context.Posts.Add(item);
@@ -39,59 +70,29 @@ namespace fakeLook_starter.Repositories
             return _dtoConverter.DtoPost(item);
         }
 
-
-
         public string GetUserById(int id)
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
-
-
-        public ICollection<Post> GetAll()
-        {
-            return _context.Posts.Include(p => p.User)
-                   .Include(p => p.Comments).ThenInclude(c => c.User)
-                   .Include(l => l.Likes).ThenInclude(u => u.User)
-                   .Select(dtoLogic).ToList();
-        }
-
-        private Post dtoLogic(Post p)
-        {
-            var dtoPost = _dtoConverter.DtoPost(p);
-            dtoPost.User = _dtoConverter.DtoUser(p.User);
-            dtoPost.Comments = p.Comments.Select(c =>
-            {
-                var dtoComment = _dtoConverter.DtoComment(c);
-                dtoComment.User = _dtoConverter.DtoUser(c.User);
-                return dtoComment;
-            }).ToList();
-            dtoPost.Likes = p.Likes.Select(l =>
-              {
-                  var dtoLike = _dtoConverter.DtoLike(l);
-                  dtoLike.User = _dtoConverter.DtoUser(l.User);
-                  return dtoLike;
-              }).ToList();
-            //dtoPost.Tags = p.Tags.Select(t =>
-            //  {
-            //      var dtoTag = _dtoConverter.DtoTag(t);
-               
-            //      return dtoTag;
-            //  }).ToList();
-            //dtoPost.UserTaggedPost = p.UserTaggedPost.Select(t =>
-            //  {
-            //      var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
-            //      dtoTaggedPost.User= _dtoConverter.DtoUser(t.User);
-            //      return dtoTaggedPost;
-            //  }).ToList();
-            return dtoPost;
-        }
-
+      
         public Post GetById(int id)
         {
             return _context.Posts.Include(p => p.User)
                    .Include(p => p.Comments).ThenInclude(c => c.User)
                    .Include(p => p.Likes).ThenInclude(l => l.User)
-                   .SingleOrDefault(p => p.Id == id);
+                   .Include(p => p.Tags)
+                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User)
+                  // .SingleOrDefault(p => p.Id == id);
+                  .Select(dtoLogic).FirstOrDefault(p => p.Id == id);
+        }
+        public ICollection<Post> GetAll()
+        {
+            return _context.Posts.Include(p => p.User)
+                   .Include(p => p.Comments).ThenInclude(c => c.User)
+                   .Include(l => l.Likes).ThenInclude(u => u.User)
+                   .Include(p => p.Tags)
+                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User)
+                   .Select(dtoLogic).ToList();
         }
 
         public ICollection<Post> GetByPredicate(Func<Post, bool> predicate)

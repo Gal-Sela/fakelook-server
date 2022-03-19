@@ -24,6 +24,7 @@ namespace fakeLook_starter.Controllers
         }
         // GET: api/<PostController>
         [HttpGet]
+        [Route("GetById")]
         public JsonResult Get(int id)
         {
             // return new string[] { "value1", "value2" };
@@ -81,7 +82,7 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Filter")]
-        public async Task<JsonResult> Filter(Filter filter)
+        public async Task<JsonResult> Filter([FromBody] Filter filter)
         {
 
             var res = _repository.GetByPredicate(post =>
