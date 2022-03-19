@@ -40,6 +40,8 @@ namespace fakeLook_starter
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddScoped<ILikeRepository, LikeRepository>();
+
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

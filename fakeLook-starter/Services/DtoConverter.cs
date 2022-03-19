@@ -16,7 +16,7 @@ namespace fakeLook_starter.Services
 
         public Like DtoLike(Like like)
         {
-            return new Like() {UserId=like.UserId, PostId=like.PostId, IsActive = like.IsActive };
+            return new Like() {Id = like.Id, UserId=like.UserId, PostId=like.PostId, IsActive = like.IsActive };
         }
 
         public Post DtoPost(Post post)

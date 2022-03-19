@@ -3,6 +3,7 @@ using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fakeLook_starter.Repositories
@@ -34,9 +35,18 @@ namespace fakeLook_starter.Repositories
             return dtoLike;
         }
 
+        public bool IsCurrentUserLiked(int userId, int postId)
+        {
+            if (_context.Likes.FirstOrDefault(l => l.UserId == userId && l.PostId == postId) != null)
+                return true;
+            return false;
+        }
+
+
         public Task<Like> Delete(int id)
         {
             throw new NotImplementedException();
+
         }
 
         public Task<Like> Edit(Like item)
@@ -57,6 +67,16 @@ namespace fakeLook_starter.Repositories
         public ICollection<Like> GetByPredicate(Func<Like, bool> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Like> DeleteByPost(int userId, int postId)
+        {
+            var res = _context.Likes.SingleOrDefault(l => l.UserId == userId && l.PostId == postId);
+            if (res == null)
+                return null;
+            _context.Likes.Remove(res);
+            await _context.SaveChangesAsync();
+            return _dtoConverter.DtoLike(res);
         }
     }
 }
