@@ -46,16 +46,29 @@ namespace fakeLook_starter.Controllers
             return new JsonResult(dtoLike);
         }
 
+        [HttpPost]
+        [Route("IsCurrentUserLiked")]
+        public bool Post([FromBody] int userId,  int postId)
+        {
+            return _repository.IsCurrentUserLiked(userId, postId);
+        }
+
         // PUT api/<LikeController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
+
+
         // DELETE api/<LikeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete()]
+        //[TypeFilter(typeof(GetUserActionFilter))]
+
+        public async Task<JsonResult> Delete( int userId,int postId)
         {
+            return new JsonResult(await _repository.DeleteByPost(userId, postId));
         }
+
     }
 }

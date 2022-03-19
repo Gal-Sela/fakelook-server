@@ -76,7 +76,6 @@ namespace fakeLook_starter.Controllers
         [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Delete(int id)
         {
-           int id1 = id;
             return new JsonResult(await _repository.Delete(id));
                  
         }
