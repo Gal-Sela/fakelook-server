@@ -21,7 +21,7 @@ namespace fakeLook_starter.Services
 
         public Post DtoPost(Post post)
         {
-            return new Post() { Id = post.Id, Date = post.Date, Description = post.Description, ImageSorce = post.ImageSorce, X_Position = post.X_Position, Y_Position = post.Y_Position, Z_Position = post.Z_Position, };
+            return new Post() { UserId=post.UserId,Id = post.Id, Date = post.Date, Description = post.Description, ImageSorce = post.ImageSorce, X_Position = post.X_Position, Y_Position = post.Y_Position, Z_Position = post.Z_Position, };
         }
 
         public Tag DtoTag(Tag tag)
