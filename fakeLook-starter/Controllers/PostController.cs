@@ -73,9 +73,10 @@ namespace fakeLook_starter.Controllers
 
         // DELETE api/<PostController>/5
         [HttpDelete("{id}")]
+        [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Delete(int id)
         {
-
+           int id1 = id;
             return new JsonResult(await _repository.Delete(id));
                  
         }
