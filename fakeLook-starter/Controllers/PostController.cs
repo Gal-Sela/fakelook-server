@@ -50,7 +50,7 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Add")]
-        [TypeFilter(typeof(GetUserActionFilter))]
+       // [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Post([FromBody] Post post)
         {
             var dbPost = await _repository.Add(post);
@@ -84,7 +84,7 @@ namespace fakeLook_starter.Controllers
         [Route("Filter")]
         public async Task<JsonResult> Filter([FromBody] Filter filter)
         {
-
+            
             var res = _repository.GetByPredicate(post =>
             {
                 bool date = FilterByDate(post.Date, filter.DateFrom, filter.DateTo);
@@ -100,27 +100,29 @@ namespace fakeLook_starter.Controllers
         bool FilterByDate(DateTime postDate, DateTime dateFrom, DateTime dateTo)
         {
             bool date;
+            if (dateTo.Year==1)
+                dateTo=DateTime.Now;
             if (dateFrom == null && dateTo == null)
             {
                 date = true;
             }
             else if (dateFrom != null && dateTo == null)
             {
-                date = postDate > dateFrom;
+                date = postDate >= dateFrom;
             }
             else if (dateFrom == null && dateTo != null)
             {
-                date = postDate < dateTo;
+                date = postDate <= dateTo;
             }
             else
             {
-                date = postDate > dateFrom && postDate < dateTo;
+                date = postDate >= dateFrom && postDate <= dateTo;
             }
             return date;
         }
         bool FilterByPublisher(int userId, ICollection<string> userNames)
         {
-            if (userNames.Count == 0)
+            if ( userNames==null|| userNames.Count == 0)
                 return true;
 
             var userName = _repository.GetUserById(userId);
@@ -129,7 +131,7 @@ namespace fakeLook_starter.Controllers
 
         bool FilterByTag(ICollection<Tag> postTags, ICollection<string> tags)
         {
-            if (tags.Count == 0)
+            if (tags==null|| tags.Count == 0)
                 return true;
 
             foreach (Tag tag in postTags)
@@ -146,7 +148,7 @@ namespace fakeLook_starter.Controllers
 
         bool FilterByUserTagged(ICollection<UserTaggedPost> users, ICollection<string> tags)
         {
-            if (tags.Count == 0)
+            if (tags==null|| tags.Count == 0)
                 return true;
             foreach (UserTaggedPost user in users)
             {
