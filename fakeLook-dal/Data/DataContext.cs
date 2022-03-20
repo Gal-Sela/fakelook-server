@@ -17,6 +17,7 @@ namespace fakeLook_dal.Data
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+            Database.SetCommandTimeout(TimeSpan.FromSeconds(600));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
