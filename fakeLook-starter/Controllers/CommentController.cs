@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using fakeLook_starter.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,19 +10,28 @@ namespace fakeLook_starter.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        private readonly ICommentRepository _repository;
+        public CommentController(ICommentRepository repository)
+        {
+            _repository=repository;
+        }
         // GET: api/<CommentController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("GetById")]
+        public JsonResult Get(int id)
         {
-            return new string[] { "value1", "value2" };
+            // return new string[] { "value1", "value2" };
+            return new JsonResult(_repository.GetById(id));
+        }
+        [HttpGet]
+        [Route("GetAll")]
+        public JsonResult Get()
+        {
+            // return new string[] { "value1", "value2" };
+            return new JsonResult(_repository.GetAll());
         }
 
-        // GET api/<CommentController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+
 
         // POST api/<CommentController>
         [HttpPost]

@@ -1,8 +1,10 @@
 ﻿using fakeLook_dal.Data;
 using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fakeLook_starter.Repositories
@@ -17,9 +19,30 @@ namespace fakeLook_starter.Repositories
             _context = context;
             _dtoConverter = dtoConverter;
         }
-            public Task<Comment> Add(Comment item)
+        private Comment dtoLogic(Comment c)
         {
-            throw new NotImplementedException();
+            var dtoComment = _dtoConverter.DtoComment(c);
+            dtoComment.User= _dtoConverter.DtoUser(c.User);
+            dtoComment.Post=_dtoConverter.DtoPost(c.Post);
+            dtoComment.Tags=c.Tags.Select(t =>
+            {
+                var dtoTag = _dtoConverter.DtoTag(t);
+
+                return dtoTag;
+            }).ToList();
+            dtoComment.UserTaggedComment = c.UserTaggedComment.Select(t =>
+            {
+                var UserTaggedComment = _dtoConverter.DtoUserTaggedComment(t);
+                UserTaggedComment.User = _dtoConverter.DtoUser(t.User);
+                return UserTaggedComment;
+            }).ToList();
+            return dtoComment;
+        }
+            public async Task<Comment> Add(Comment item)
+        {
+            var res = _context.Comments.Add(item);
+            await _context.SaveChangesAsync();
+            return _dtoConverter.DtoComment(res.Entity);
         }
 
         public Task<Comment> Delete(int id)
@@ -34,12 +57,20 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Comment> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Comments.Include(u => u.User)
+                   .Include(p=>p.Post).ThenInclude(u=>u.User)
+                  .Include(t => t.Tags)
+                  .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
+                  .Select(dtoLogic).ToList();
         }
 
         public Comment GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Comments.Include(u => u.User)
+                   .Include(p => p.Post).ThenInclude(u => u.User)
+                  .Include(t => t.Tags)
+                  .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
+                  .Select(dtoLogic).FirstOrDefault(c=>c.Id== id);
         }
 
         public ICollection<Comment> GetByPredicate(Func<Comment, bool> predicate)
