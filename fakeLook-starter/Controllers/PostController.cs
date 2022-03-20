@@ -102,22 +102,22 @@ namespace fakeLook_starter.Controllers
             bool date;
             if (dateTo.Year==1)
                 dateTo=DateTime.Now;
-            if (dateFrom == null && dateTo == null)
-            {
-                date = true;
-            }
-            else if (dateFrom != null && dateTo == null)
-            {
-                date = postDate >= dateFrom;
-            }
-            else if (dateFrom == null && dateTo != null)
-            {
-                date = postDate <= dateTo;
-            }
-            else
-            {
+            //if (dateFrom == null && dateTo == null)
+            //{
+            //    date = true;
+            //}
+            //else if (dateFrom != null && dateTo == null)
+            //{
+            //    date = postDate >= dateFrom;
+            //}
+            //else if (dateFrom == null && dateTo != null)
+            //{
+            //    date = postDate <= dateTo;
+            //}
+            //else
+          //  {
                 date = postDate >= dateFrom && postDate <= dateTo;
-            }
+           // }
             return date;
         }
         bool FilterByPublisher(int userId, ICollection<string> userNames)
