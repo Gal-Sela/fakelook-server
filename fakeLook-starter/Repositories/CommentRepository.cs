@@ -77,5 +77,14 @@ namespace fakeLook_starter.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public ICollection<Comment> GetAllComentsByPostId(int postId)
+        {
+            return _context.Comments.Where(p=>p.PostId== postId).Include(u => u.User)
+                             .Include(p=>p.Post)
+                             .Include(t => t.Tags)
+                             .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
+                             .Select(dtoLogic).ToList();
+        }
     }
 }

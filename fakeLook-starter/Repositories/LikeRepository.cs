@@ -78,6 +78,11 @@ namespace fakeLook_starter.Repositories
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoLike(res);
         }
+
+        public int GetNumberOfLikesByPostId(int postId)
+        {
+            return _context.Likes.Where(p=>p.PostId == postId).Count();
+        }
     }
 }
 

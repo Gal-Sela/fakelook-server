@@ -24,6 +24,13 @@ namespace fakeLook_starter.Controllers
             return new JsonResult(_repository.GetById(id));
         }
         [HttpGet]
+        [Route("GetAllByPosyId")]
+        public JsonResult GetAllByPosyId(int postId)
+        {
+            // return new string[] { "value1", "value2" };
+            return new JsonResult(_repository.GetAllComentsByPostId(postId));
+        }
+        [HttpGet]
         [Route("GetAll")]
         public JsonResult Get()
         {
