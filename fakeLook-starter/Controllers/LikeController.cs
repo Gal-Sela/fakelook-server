@@ -27,7 +27,12 @@ namespace fakeLook_starter.Controllers
         {
             return new string[] { "value1", "value2" };
         }
-
+        [HttpGet]
+        [Route("GetNumberOfLikesByPostId")]
+        public int GetNumberOfLikesByPostId(int postId)
+        {
+            return _repository.GetNumberOfLikesByPostId(postId);
+        }
         // GET api/<LikeController>/5
         [HttpGet("{id}")]
         public string Get(int id)

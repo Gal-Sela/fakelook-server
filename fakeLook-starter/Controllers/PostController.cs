@@ -35,8 +35,8 @@ namespace fakeLook_starter.Controllers
         public JsonResult GetAll()
         {
             // return new string[] { "value1", "value2" };
-            var posts = _repository.GetAll();
-            return new JsonResult(posts);
+            
+            return new JsonResult(_repository.GetAll());
         }
 
 
