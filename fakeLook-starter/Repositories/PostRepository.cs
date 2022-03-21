@@ -70,7 +70,7 @@ namespace fakeLook_starter.Repositories
             return _dtoConverter.DtoPost(item);
         }
 
-        public string GetUserById(int id)
+        public string GetUserNameByUserId(int id)
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
@@ -97,7 +97,7 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetByPredicate(Func<Post, bool> predicate)
         {
-            return _context.Posts.Where(predicate).ToList();
+            return _context.Posts.Include(p=>p.UserTaggedPost).Include(p=>p.User).Include(p=>p.Tags).Where(predicate).ToList();
         }
 
         public async Task<Post> Delete(int id)

@@ -22,6 +22,7 @@ namespace fakeLook_starter.Repositories
 
         public async Task<Like> Add(Like item)
         {
+            item.IsActive = true;
             var res = _context.Likes.Add(item);
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoLike(res.Entity);
@@ -37,7 +38,7 @@ namespace fakeLook_starter.Repositories
 
         public bool IsCurrentUserLiked(int userId, int postId)
         {
-            if (_context.Likes.FirstOrDefault(l => l.UserId == userId && l.PostId == postId) != null)
+            if (_context.Likes.FirstOrDefault(l => l.UserId == userId && l.PostId == postId && l.IsActive) != null)
                 return true;
             return false;
         }
@@ -61,7 +62,7 @@ namespace fakeLook_starter.Repositories
 
         public Like GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Likes.SingleOrDefault(l=>l.Id == id);
         }
 
         public ICollection<Like> GetByPredicate(Func<Like, bool> predicate)
@@ -77,6 +78,19 @@ namespace fakeLook_starter.Repositories
             _context.Likes.Remove(res);
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoLike(res);
+        }
+
+        public int GetNumberOfLikesByPostId(int postId)
+        {
+            return _context.Likes.Where(p=>p.PostId == postId).Where(l=>l.IsActive).Count();
+        }
+
+        public async Task<Like>  RemoveLike(int likeId)
+        {
+            var like = GetById(likeId);
+            like.IsActive = false;
+            await _context.SaveChangesAsync();
+            return like;
         }
     }
 }

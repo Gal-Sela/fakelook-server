@@ -17,35 +17,28 @@ namespace fakeLook_starter.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostRepository _repository;
+        private readonly IUserRepository _userRepository;
 
-        public PostController(IPostRepository repository)
+        public PostController(IPostRepository repository, IUserRepository userRepository)
         {
             _repository = repository;
+            _userRepository = userRepository;
         }
         // GET: api/<PostController>
         [HttpGet]
         [Route("GetById")]
         public JsonResult Get(int id)
         {
-            // return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetById(id));
         }
         [HttpGet]
         [Route("GetAll")]
         public JsonResult GetAll()
         {
-            // return new string[] { "value1", "value2" };
-            var posts = _repository.GetAll();
-            return new JsonResult(posts);
+           
+            
+            return new JsonResult(_repository.GetAll());
         }
-
-
-        //// GET api/<PostController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
 
         // POST api/<PostController>
 
@@ -64,13 +57,7 @@ namespace fakeLook_starter.Controllers
                 return new JsonResult(dtoPost);
 
         }
-        //[HttpPost]
-        //[Route("FilterByPublisher")]
-        //public JsonResult FilterByPublisher([FromBody] int id)
-        //{
-        //    return new JsonResult(_repository.FilterByPublisher(id));
-        //}
-
+     
         // PUT api/<PostController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
@@ -107,27 +94,11 @@ namespace fakeLook_starter.Controllers
         bool FilterByDate(DateTime postDate, DateTime? dateFrom, DateTime? dateTo)
         {
             bool date;
-
             if(dateFrom==null)
                 dateFrom=DateTime.MinValue;
             if (dateTo == null)
                 dateTo = DateTime.Now;
-            //if (dateTo.Year==1)
-            //    dateTo=DateTime.Now;
-
-            //if (dateFrom == null && dateTo == null)
-            //{
-            //    date = true;
-            //}
-            //else if (dateFrom != null && dateTo == null)
-            //{
-            //    date = postDate >= dateFrom;
-            //}
-            //else if (dateFrom == null && dateTo != null)
-            //{
-            //    date = postDate <= dateTo;
-            //}
-            //else
+       
           //  {
                 date = postDate >= dateFrom && postDate <= dateTo;
            // }
@@ -135,10 +106,11 @@ namespace fakeLook_starter.Controllers
         }
         bool FilterByPublisher(int userId, ICollection<string> userNames)
         {
-            if ( userNames==null|| userNames.Count == 0)
-                return true;
+            if ( userNames.Count == 1)
+                if (userNames.Contains(""))
+                    return true;
 
-            var userName = _repository.GetUserById(userId);
+            var userName = _repository.GetUserNameByUserId(userId);
             return userNames.Contains(userName);
         }
 
@@ -162,13 +134,17 @@ namespace fakeLook_starter.Controllers
 
         bool FilterByUserTagged(ICollection<UserTaggedPost> users, ICollection<string> tags)
         {
-            if (tags==null|| tags.Count == 0)
-                return true;
-            foreach (UserTaggedPost user in users)
+            if (tags.Count == 1)
+                if (tags.Contains(""))
+                    return true;
+            foreach (UserTaggedPost userTaggedPost in users)
             {
+               // var user= _userRepository.GetById(userTaggedPost.UserId);
+               var userName= _repository.GetUserNameByUserId(userTaggedPost.UserId);
+
                 foreach (string tagName in tags)
                 {
-                    if (user.User.Name == tagName)
+                    if (userName == tagName)
                         return true;
 
                 }

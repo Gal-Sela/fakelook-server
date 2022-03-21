@@ -8,6 +8,10 @@ namespace fakeLook_starter.Interfaces
         public bool IsCurrentUserLiked(int userId, int postId);
 
         public Task<Like> DeleteByPost(int likeId, int postId);
+       public int GetNumberOfLikesByPostId(int postId);
+
+       // public bool IsActiveLike(bool isActive);
+       public Task<Like> RemoveLike(int likeId);
 
 
     }
