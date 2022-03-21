@@ -24,7 +24,7 @@ namespace fakeLook_starter.Controllers
         {
             //return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetAll());
-               return new JsonResult(_repository.GetAll());
+              
         }
         [HttpGet]
         [Route("GetById")]
