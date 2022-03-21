@@ -55,7 +55,12 @@ namespace fakeLook_starter.Controllers
         public async Task<JsonResult> Post([FromBody] Post post)
         {
             var dbPost = await _repository.Add(post);
-            var dtoPost = new Post() {Id = dbPost.Id};
+            var dtoPost = new Post() {UserId = dbPost.UserId,Id = dbPost.Id, Date = dbPost.Date,
+            Description = dbPost.Description, ImageSorce = dbPost.ImageSorce,
+                X_Position = dbPost.X_Position,
+                Y_Position = dbPost.Y_Position,
+                Z_Position = dbPost.Z_Position
+            };
                 return new JsonResult(dtoPost);
 
         }
@@ -99,11 +104,17 @@ namespace fakeLook_starter.Controllers
             });
             return new JsonResult(res);
         }
-        bool FilterByDate(DateTime postDate, DateTime dateFrom, DateTime dateTo)
+        bool FilterByDate(DateTime postDate, DateTime? dateFrom, DateTime? dateTo)
         {
             bool date;
-            if (dateTo.Year==1)
-                dateTo=DateTime.Now;
+
+            if(dateFrom==null)
+                dateFrom=DateTime.MinValue;
+            if (dateTo == null)
+                dateTo = DateTime.Now;
+            //if (dateTo.Year==1)
+            //    dateTo=DateTime.Now;
+
             //if (dateFrom == null && dateTo == null)
             //{
             //    date = true;
