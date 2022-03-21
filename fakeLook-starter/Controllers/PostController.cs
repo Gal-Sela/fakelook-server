@@ -17,17 +17,18 @@ namespace fakeLook_starter.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostRepository _repository;
+        private readonly IUserRepository _userRepository;
 
-        public PostController(IPostRepository repository)
+        public PostController(IPostRepository repository, IUserRepository userRepository)
         {
             _repository = repository;
+            _userRepository = userRepository;
         }
         // GET: api/<PostController>
         [HttpGet]
         [Route("GetById")]
         public JsonResult Get(int id)
         {
-            // return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetById(id));
         }
         [HttpGet]
@@ -102,7 +103,7 @@ namespace fakeLook_starter.Controllers
                 if (userNames.Contains(""))
                     return true;
 
-            var userName = _repository.GetUserById(userId);
+            var userName = _repository.GetUserNameByUserId(userId);
             return userNames.Contains(userName);
         }
 
@@ -129,11 +130,14 @@ namespace fakeLook_starter.Controllers
             if (tags.Count == 1)
                 if (tags.Contains(""))
                     return true;
-            foreach (UserTaggedPost user in users)
+            foreach (UserTaggedPost userTaggedPost in users)
             {
+               // var user= _userRepository.GetById(userTaggedPost.UserId);
+               var userName= _repository.GetUserNameByUserId(userTaggedPost.UserId);
+
                 foreach (string tagName in tags)
                 {
-                    if (user.User.UserName == tagName)
+                    if (userName == tagName)
                         return true;
 
                 }
