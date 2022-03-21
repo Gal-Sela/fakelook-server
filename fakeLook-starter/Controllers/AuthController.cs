@@ -30,7 +30,7 @@ namespace fakeLook_starter.Controllers
             var currentUser = _repository.GetByEmailAndPassword(user.Email,user.Password);
             if (currentUser == null) return Problem("user not in system");
             var token = _tokenService.CreateToken(currentUser);
-            return Ok(new AuthResponse (){Token=token, Id=currentUser.Id });
+            return Ok(new AuthResponse (){Token=token, Id=currentUser.Id, UserName=currentUser.UserName });
         }
 
 
@@ -62,14 +62,6 @@ namespace fakeLook_starter.Controllers
         //    return Ok();
         //}
 
-
-
-        //// GET: api/<AuthController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
 
         // GET api/<AuthController>/5
         [HttpGet("{id}")]
