@@ -21,7 +21,7 @@ namespace fakeLook_starter.Controllers
             _repository = repository;
         }
 
-        // GET: api/<LikeController>
+    
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -33,14 +33,13 @@ namespace fakeLook_starter.Controllers
         {
             return _repository.GetNumberOfLikesByPostId(postId);
         }
-        // GET api/<LikeController>/5
+        
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<LikeController>
         [HttpPost]
         [Route("Add")]
         [TypeFilter(typeof(GetUserActionFilter))]
@@ -49,6 +48,13 @@ namespace fakeLook_starter.Controllers
             var dbLike = await _repository.Add(like);
             var dtoLike = new Like() { UserId = dbLike.UserId, PostId = dbLike.PostId, IsActive = dbLike.IsActive };
             return new JsonResult(dtoLike);
+        }
+        [HttpPut]
+        [Route("RemoveLike")]
+        public async Task<JsonResult> RemoveLike(int likeId)
+        {
+
+            return new JsonResult(await _repository.RemoveLike(likeId));
         }
 
         [HttpPost]
