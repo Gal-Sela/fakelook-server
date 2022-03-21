@@ -83,6 +83,7 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Filter")]
+        //[TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Filter([FromBody] Filter filter)
         {
             
@@ -91,7 +92,7 @@ namespace fakeLook_starter.Controllers
                 bool date = FilterByDate(post.Date, filter.DateFrom, filter.DateTo);
                 bool publishers = FilterByPublisher(post.UserId, filter.Publishers);
                 bool tags = FilterByTag(post.Tags, filter.Tags);
-                bool userTags = FilterByUserTagged(post.UserTaggedPost, filter.UsersTaggedInPostId);
+                bool userTags = FilterByUserTagged(post.UserTaggedPost, filter.UsersTaggedInPost);
 
                 return date && publishers && tags && userTags;
 
@@ -132,7 +133,8 @@ namespace fakeLook_starter.Controllers
 
         bool FilterByTag(ICollection<Tag> postTags, ICollection<string> tags)
         {
-            if (tags==null|| tags.Count == 0)
+            if (tags.Count == 1)
+                if (tags.Contains(""))
                 return true;
 
             foreach (Tag tag in postTags)
