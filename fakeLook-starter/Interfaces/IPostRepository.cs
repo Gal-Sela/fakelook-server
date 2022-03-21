@@ -7,7 +7,7 @@ namespace fakeLook_starter.Interfaces
     public interface IPostRepository : IRepository<Post>
     {
     
-        public string GetUserById(int id);
+        public string GetUserNameByUserId(int id);
         
     }
 }

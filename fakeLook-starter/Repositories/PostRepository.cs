@@ -70,7 +70,7 @@ namespace fakeLook_starter.Repositories
             return _dtoConverter.DtoPost(item);
         }
 
-        public string GetUserById(int id)
+        public string GetUserNameByUserId(int id)
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
