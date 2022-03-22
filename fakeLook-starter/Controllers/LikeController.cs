@@ -49,19 +49,21 @@ namespace fakeLook_starter.Controllers
             var dtoLike = new Like() { UserId = dbLike.UserId, PostId = dbLike.PostId, IsActive = dbLike.IsActive };
             return new JsonResult(dtoLike);
         }
-        [HttpPut]
+        [HttpPost]
         [Route("RemoveLike")]
-        public async Task<JsonResult> RemoveLike(int likeId)
+        public async Task<JsonResult> RemoveLike([FromBody] Like like)
         {
 
-            return new JsonResult(await _repository.RemoveLike(likeId));
+            return new JsonResult(await _repository.RemoveLike(like.PostId, like.UserId));
         }
 
         [HttpPost]
         [Route("IsCurrentUserLiked")]
-        public bool Post([FromBody] int userId,  int postId)
+        //[TypeFilter(typeof(GetUserActionFilter))]
+
+        public async Task<JsonResult> Post( int userId,  int postId)
         {
-            return _repository.IsCurrentUserLiked(userId, postId);
+            return new JsonResult(await _repository.IsCurrentUserLiked(userId, postId));
         }
 
         // PUT api/<LikeController>/5

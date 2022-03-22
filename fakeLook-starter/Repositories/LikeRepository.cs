@@ -36,11 +36,11 @@ namespace fakeLook_starter.Repositories
             return dtoLike;
         }
 
-        public bool IsCurrentUserLiked(int userId, int postId)
+        public Task<bool> IsCurrentUserLiked(int userId, int postId)
         {
             if (_context.Likes.FirstOrDefault(l => l.UserId == userId && l.PostId == postId && l.IsActive) != null)
-                return true;
-            return false;
+                return Task.FromResult(true);
+            return Task.FromResult(false);
         }
 
 
@@ -85,10 +85,11 @@ namespace fakeLook_starter.Repositories
             return _context.Likes.Where(p=>p.PostId == postId).Where(l=>l.IsActive).Count();
         }
 
-        public async Task<Like>  RemoveLike(int likeId)
+        public async Task<Like> RemoveLike( int postId, int userId)
         {
-            var like = GetById(likeId);
-            like.IsActive = false;
+            var like = _context.Likes.Where(l=>l.UserId==userId && l.PostId==postId).SingleOrDefault();
+          //  var like = GetById(likeId);
+            like.IsActive = !like.IsActive;
             await _context.SaveChangesAsync();
             return like;
         }

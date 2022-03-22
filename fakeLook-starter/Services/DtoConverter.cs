@@ -11,7 +11,7 @@ namespace fakeLook_starter.Services
     {
         public Comment DtoComment(Comment comment)
         {
-            return new Comment() { Id = comment.Id, Content = comment.Content,UserId=comment.UserId,PostId=comment.PostId };
+            return new Comment() { Id = comment.Id, Content = comment.Content,UserId=comment.UserId,PostId=comment.PostId, UserName=comment.UserName};
         }
 
         public Like DtoLike(Like like)

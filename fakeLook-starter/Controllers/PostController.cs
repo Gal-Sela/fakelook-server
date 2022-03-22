@@ -48,7 +48,8 @@ namespace fakeLook_starter.Controllers
         public async Task<JsonResult> Post([FromBody] Post post)
         {
             var dbPost = await _repository.Add(post);
-            var dtoPost = new Post() {UserId = dbPost.UserId,Id = dbPost.Id, Date = dbPost.Date,
+            var dtoPost = new Post() {
+                Id = dbPost.Id, UserId = dbPost.UserId, Date = dbPost.Date,
             Description = dbPost.Description, ImageSorce = dbPost.ImageSorce,
                 X_Position = dbPost.X_Position,
                 Y_Position = dbPost.Y_Position,
