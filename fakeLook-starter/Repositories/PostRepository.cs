@@ -84,7 +84,7 @@ namespace fakeLook_starter.Repositories
 
              //   UserTaggedPost utp = new UserTaggedPost();
                   //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
-              
+                //  tags.Add(await _tagRepository.Add(tag));
                 UserTaggedPost userTaggedPost = new UserTaggedPost();
                 //userTaggedPost = _userTaggedPostRepository.GetById(u.Id);
                 userTaggedPost.UserId = u.Id;
