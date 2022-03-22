@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace fakeLook_starter.Repositories
@@ -13,11 +14,14 @@ namespace fakeLook_starter.Repositories
     {
         readonly private DataContext _context;
         readonly private IDtoConverter _dtoConverter;
+        readonly private IUserRepository _userRepository;
 
-        public CommentRepository(DataContext context, IDtoConverter dtoConverter)
+        public CommentRepository(DataContext context, IDtoConverter dtoConverter, IUserRepository userRepository)
         {
             _context = context;
             _dtoConverter = dtoConverter;
+            _userRepository = userRepository;
+
         }
         private Comment dtoLogic(Comment c)
         {
@@ -38,9 +42,52 @@ namespace fakeLook_starter.Repositories
             }).ToList();
             return dtoComment;
         }
-            public async Task<Comment> Add(Comment item)
+        //    public async Task<Comment> Add(Comment item)
+        //{
+        //    var res = _context.Comments.Add(item);
+        //    await _context.SaveChangesAsync();
+        //    return _dtoConverter.DtoComment(res.Entity);
+        //}
+
+        public async Task<Comment> Add(Comment comment)
         {
-            var res = _context.Comments.Add(item);
+            string tagPattern = @"#\S+";
+            string utpPattern = @"@\S+";
+            var description = comment.Content;
+            //Regex tagRegex = new Regex(tagPattern);
+            ICollection<Tag> tags = new List<Tag>();
+            ICollection<UserTaggedComment> userTaggedComments = new List<UserTaggedComment>();
+            var matchTag = Regex.Matches(description, tagPattern);
+
+            var matchUtp = Regex.Matches(description, utpPattern);
+            for (int i = 0; i < matchTag.Count; i++)
+            {
+                Tag tag = new Tag();
+                tag.Content = matchTag[i].Value.Remove(0, 1);
+                tags.Add(tag);
+            }
+            for (int i = 0; i < matchUtp.Count; i++)
+            {
+                User u = _userRepository.GetUserByUserName(matchUtp[i].Value.Remove(0, 1));
+                if (u == null)
+                    continue;
+
+                //   UserTaggedPost utp = new UserTaggedPost();
+                //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
+                //  tags.Add(await _tagRepository.Add(tag));
+                UserTaggedComment userTaggedComment = new UserTaggedComment();
+                //userTaggedPost = _userTaggedPostRepository.GetById(u.Id);
+                userTaggedComment.UserId = u.Id;
+                userTaggedComments.Add(userTaggedComment);
+
+
+            }
+            comment.Tags = tags;
+            comment.UserTaggedComment = userTaggedComments;
+            var res = _context.Comments.Add(comment);
+
+
+
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoComment(res.Entity);
         }
