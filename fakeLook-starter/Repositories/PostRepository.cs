@@ -89,7 +89,7 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Posts.Include(p => p.User)
                    .Include(p => p.Comments).ThenInclude(c => c.User)
-                   .Include(l => l.Likes).ThenInclude(u => u.User)
+                   .Include(l => l.Likes.Where(l => l.IsActive)).ThenInclude(u => u.User)
                    .Include(p => p.Tags)
                    .Include(p => p.UserTaggedPost).ThenInclude(u => u.User)
                    .Select(dtoLogic).ToList();

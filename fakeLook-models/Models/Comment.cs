@@ -17,6 +17,7 @@ namespace fakeLook_models.Models
         public virtual User User { get; set; }
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
+        public string UserName { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<UserTaggedComment> UserTaggedComment { get; set; }
     }
