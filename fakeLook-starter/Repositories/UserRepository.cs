@@ -53,5 +53,10 @@ namespace fakeLook_starter.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public User GetUserByUserName(string userName)
+        {
+            return _context.Users.SingleOrDefault(u=>u.UserName == userName);
+        }
     }
 }
