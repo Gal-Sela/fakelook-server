@@ -64,5 +64,10 @@ namespace fakeLook_starter.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public int GetIdByUserName(string userName)
+        {
+            return _context.UserTaggedPosts.SingleOrDefault(u=>u.User.UserName == userName).Id;
+        }
     }
 }

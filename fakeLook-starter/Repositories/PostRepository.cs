@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace fakeLook_starter.Repositories
@@ -14,10 +15,17 @@ namespace fakeLook_starter.Repositories
     {
         readonly private DataContext _context;
         readonly private IDtoConverter _dtoConverter;
-        public PostRepository(DataContext context, IDtoConverter dtoConverter)
+        readonly private ITagRepository _tagRepository;
+        readonly private IUserRepository _userRepository;
+        readonly private IUserTaggedPostRepository _userTaggedPostRepository;
+
+        public PostRepository(DataContext context,IUserRepository userRepository, IDtoConverter dtoConverter, ITagRepository tagRepository, IUserTaggedPostRepository userTaggedPostRepository)
         {
             _context = context;
             _dtoConverter = dtoConverter;
+            _userRepository = userRepository;
+            _tagRepository = tagRepository;
+            _userTaggedPostRepository = userTaggedPostRepository;
         }
 
         private Post dtoLogic(Post p)
@@ -53,7 +61,43 @@ namespace fakeLook_starter.Repositories
 
         public async Task<Post> Add(Post item)
         {
+            string tagPattern = @"#\S+";
+            string utpPattern = @"@\S+";
+            var description = item.Description;
+            //Regex tagRegex = new Regex(tagPattern);
+            ICollection<Tag> tags =new List<Tag>();
+            ICollection<UserTaggedPost> userTaggedPosts = new List<UserTaggedPost>();
+            var matchTag = Regex.Matches(description, tagPattern);
+
+            var matchUtp = Regex.Matches(description, utpPattern);
+            for (int i = 0; i < matchTag.Count; i++)
+            {
+               Tag tag =new Tag();
+                tag.Content = matchTag[i].Value.Remove(0,1);
+                tags.Add(tag);
+            }
+            for (int i = 0; i < matchUtp.Count; i++)
+            {
+                User u = _userRepository.GetUserByUserName(matchUtp[i].Value.Remove(0, 1));
+                if (u == null)
+                    continue;
+
+             //   UserTaggedPost utp = new UserTaggedPost();
+                  //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
+                //  tags.Add(await _tagRepository.Add(tag));
+                UserTaggedPost userTaggedPost = new UserTaggedPost();
+                //userTaggedPost = _userTaggedPostRepository.GetById(u.Id);
+                userTaggedPost.UserId = u.Id;
+                userTaggedPosts.Add(userTaggedPost);
+             
+
+            }
+            item.Tags = tags;
+            item.UserTaggedPost = userTaggedPosts;
             var res = _context.Posts.Add(item);
+            
+            
+           
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoPost(res.Entity);
         }
