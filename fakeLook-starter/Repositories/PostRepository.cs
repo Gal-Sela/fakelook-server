@@ -53,8 +53,8 @@ namespace fakeLook_starter.Repositories
             dtoPost.UserTaggedPost = p.Tags != null ? p.UserTaggedPost.Select(t =>
             {
                 var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
-              //  dtoTaggedPost.User = _userRepository.GetById(p.UserId);
-             //   dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
+                //dtoTaggedPost.User = _userRepository.GetById(p.UserId);
+              //dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
                 return dtoTaggedPost;
             }).ToList() : new List<UserTaggedPost>();
             return dtoPost;
