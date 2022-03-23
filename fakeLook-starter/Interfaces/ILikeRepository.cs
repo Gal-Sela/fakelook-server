@@ -11,7 +11,7 @@ namespace fakeLook_starter.Interfaces
        public int GetNumberOfLikesByPostId(int postId);
 
        // public bool IsActiveLike(bool isActive);
-       public Task<Like> RemoveLike(int postId, int userId);
+       public Task<Like> ToggleIsActiveLike(int postId, int userId);
 
         public bool IsLikeExist(int userId,int postId);
     }

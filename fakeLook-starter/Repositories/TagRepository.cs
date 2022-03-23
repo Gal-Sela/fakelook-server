@@ -18,6 +18,7 @@ namespace fakeLook_starter.Repositories
         private Tag dtoLogic(Tag t)
         {
             var dtoTag = _dtoConverter.DtoTag(t);
+            /*
             dtoTag.Posts = t.Posts.Select(p =>
             {
                 var dtoPost= _dtoConverter.DtoPost(p);
@@ -26,7 +27,7 @@ namespace fakeLook_starter.Repositories
             dtoTag.Comments= t.Comments.Select(p => { 
             var dtoComment= _dtoConverter.DtoComment(p);
                 return dtoComment;
-            }).ToList();
+            }).ToList();*/
             return dtoTag;
         
         }

@@ -30,7 +30,7 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Users.ToList();
         }
 
         public User GetById(int id)
