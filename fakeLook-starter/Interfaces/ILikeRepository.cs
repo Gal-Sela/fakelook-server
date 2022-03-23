@@ -13,6 +13,6 @@ namespace fakeLook_starter.Interfaces
        // public bool IsActiveLike(bool isActive);
        public Task<Like> RemoveLike(int postId, int userId);
 
-
+        public bool IsLikeExist(int userId,int postId);
     }
 }

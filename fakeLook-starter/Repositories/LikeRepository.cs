@@ -26,10 +26,16 @@ namespace fakeLook_starter.Repositories
             //    return await RemoveLike(item.UserId, item.PostId);
             //else
             //{
+            if (!IsLikeExist(item.UserId, item.PostId))
+            {
                 item.IsActive = true;
                 var res = _context.Likes.Add(item);
                 await _context.SaveChangesAsync();
                 return _dtoConverter.DtoLike(res.Entity);
+            }
+            else
+               return await RemoveLike(item.PostId, item.UserId);
+
             //}
         }
 
@@ -97,6 +103,12 @@ namespace fakeLook_starter.Repositories
             like.IsActive = !like.IsActive;
             await _context.SaveChangesAsync();
             return like;
+        }
+
+        public bool IsLikeExist(int userId, int postId)
+        {
+            var x= (_context.Likes.SingleOrDefault(l=>l.UserId==userId && l.PostId==postId) != null);
+            return x;
         }
     }
 }
