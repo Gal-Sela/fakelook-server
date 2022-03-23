@@ -62,9 +62,9 @@ namespace fakeLook_starter.Repositories
         public string ForgotPassword(string email, string name)
         {
             var res = _context.Users.SingleOrDefault(p => p.Email == email && p.Name == name);
-            if(res != null) 
+            if(res != null)
                 return res?.Password;
-            return "Worng Details";
+             return "Worng Details";
         }
     }
 }
