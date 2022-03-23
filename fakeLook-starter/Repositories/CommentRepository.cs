@@ -15,12 +15,14 @@ namespace fakeLook_starter.Repositories
         readonly private DataContext _context;
         readonly private IDtoConverter _dtoConverter;
         readonly private IUserRepository _userRepository;
+        readonly private ITagRepository _tagRepository;
 
-        public CommentRepository(DataContext context, IDtoConverter dtoConverter, IUserRepository userRepository)
+        public CommentRepository(DataContext context, IDtoConverter dtoConverter, IUserRepository userRepository, ITagRepository tagRepository)
         {
             _context = context;
             _dtoConverter = dtoConverter;
             _userRepository = userRepository;
+            _tagRepository = tagRepository;
 
         }
         private Comment dtoLogic(Comment c)
@@ -56,15 +58,22 @@ namespace fakeLook_starter.Repositories
             var description = comment.Content;
             //Regex tagRegex = new Regex(tagPattern);
             ICollection<Tag> tags = new List<Tag>();
+            ICollection<Tag> tempTags = new List<Tag>();
             ICollection<UserTaggedComment> userTaggedComments = new List<UserTaggedComment>();
             var matchTag = Regex.Matches(description, tagPattern);
 
             var matchUtp = Regex.Matches(description, utpPattern);
             for (int i = 0; i < matchTag.Count; i++)
             {
-                Tag tag = new Tag();
-                tag.Content = matchTag[i].Value.Remove(0, 1);
-                tags.Add(tag);
+                Tag tag;
+                tag = _tagRepository.isTagExist(matchTag[i].Value.Remove(0, 1));
+                if (tag == null)
+                    tag = new Tag();
+                 tag.Content = matchTag[i].Value.Remove(0, 1);
+                if (_tagRepository.isTagExist(tag.Content) == null)
+                    tags.Add(tag);
+                else
+                    tempTags.Add(tag);
             }
             for (int i = 0; i < matchUtp.Count; i++)
             {
@@ -82,8 +91,10 @@ namespace fakeLook_starter.Repositories
 
 
             }
-            comment.Tags = tags;
-            comment.UserTaggedComment = userTaggedComments;
+            if (tags.Count > 0)
+                comment.Tags = tags;
+            else
+                comment.Tags = tempTags; comment.UserTaggedComment = userTaggedComments;
             var res = _context.Comments.Add(comment);
 
 

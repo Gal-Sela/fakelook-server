@@ -54,7 +54,7 @@ namespace fakeLook_starter.Controllers
         public async Task<JsonResult> RemoveLike([FromBody] Like like)
         {
 
-            return new JsonResult(await _repository.RemoveLike(like.PostId, like.UserId));
+            return new JsonResult(await _repository.ToggleIsActiveLike(like.PostId, like.UserId));
         }
 
         [HttpPost]

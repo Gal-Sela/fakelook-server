@@ -34,7 +34,7 @@ namespace fakeLook_starter.Repositories
                 return _dtoConverter.DtoLike(res.Entity);
             }
             else
-               return await RemoveLike(item.PostId, item.UserId);
+               return await ToggleIsActiveLike(item.PostId, item.UserId);
 
             //}
         }
@@ -96,7 +96,7 @@ namespace fakeLook_starter.Repositories
             return _context.Likes.Where(p=>p.PostId == postId).Where(l=>l.IsActive).Count();
         }
 
-        public async Task<Like> RemoveLike( int postId, int userId)
+        public async Task<Like> ToggleIsActiveLike( int postId, int userId)
         {
             var like = _context.Likes.Where(l=>l.UserId==userId && l.PostId==postId).SingleOrDefault();
           //  var like = GetById(likeId);

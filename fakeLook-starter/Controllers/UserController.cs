@@ -16,21 +16,21 @@ namespace fakeLook_starter.Controllers
         {
             _repository = repository;
         }
-        // GET: api/<UserController>
+
         [HttpGet]
         public JsonResult Get(int id)
         {
             return new JsonResult(_repository.GetById(id));
 
-            //    return new string[] { "value1", "value2" };
+        }
+        [HttpGet]
+        [Route("GetAll")]
+        public JsonResult GetAll()
+        {
+            return new JsonResult(_repository.GetAll());
         }
 
-        // GET api/<UserController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+  
 
         // POST api/<UserController>
         [HttpPost]

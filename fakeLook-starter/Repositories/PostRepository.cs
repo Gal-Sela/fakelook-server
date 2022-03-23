@@ -19,7 +19,7 @@ namespace fakeLook_starter.Repositories
         readonly private IUserRepository _userRepository;
         readonly private IUserTaggedPostRepository _userTaggedPostRepository;
 
-        public PostRepository(DataContext context,IUserRepository userRepository, IDtoConverter dtoConverter, ITagRepository tagRepository, IUserTaggedPostRepository userTaggedPostRepository)
+        public PostRepository(DataContext context, IUserRepository userRepository, IDtoConverter dtoConverter, ITagRepository tagRepository, IUserTaggedPostRepository userTaggedPostRepository)
         {
             _context = context;
             _dtoConverter = dtoConverter;
@@ -32,29 +32,29 @@ namespace fakeLook_starter.Repositories
         {
             var dtoPost = _dtoConverter.DtoPost(p);
             dtoPost.User = _dtoConverter.DtoUser(p.User);
-            dtoPost.Comments = p.Comments!=null?p.Comments.Select(c =>
-            {
-                var dtoComment = _dtoConverter.DtoComment(c);
-                dtoComment.User = _dtoConverter.DtoUser(c.User);
-                return dtoComment;
-            }).ToList():new List<Comment>();
+            dtoPost.Comments = p.Comments != null ? p.Comments.Select(c =>
+                {
+                    var dtoComment = _dtoConverter.DtoComment(c);
+                    dtoComment.User = _dtoConverter.DtoUser(c.User);
+                    return dtoComment;
+                }).ToList() : new List<Comment>();
             dtoPost.Likes = p.Likes != null ? p.Likes.Select(l =>
             {
                 var dtoLike = _dtoConverter.DtoLike(l);
                 dtoLike.User = _dtoConverter.DtoUser(l.User);
                 return dtoLike;
             }).ToList() : new List<Like>();
-            dtoPost.Tags = p.Tags != null ?p.Tags.Select(t =>
-            {
-                var dtoTag = _dtoConverter.DtoTag(t);
+            dtoPost.Tags = p.Tags != null ? p.Tags.Select(t =>
+             {
+                 var dtoTag = _dtoConverter.DtoTag(t);
 
-                return dtoTag;
-            }).ToList(): new List<Tag>();
+                 return dtoTag;
+             }).ToList() : new List<Tag>();
             dtoPost.UserTaggedPost = p.Tags != null ? p.UserTaggedPost.Select(t =>
             {
                 var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
                 //dtoTaggedPost.User = _userRepository.GetById(p.UserId);
-              //dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
+                //dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
                 return dtoTaggedPost;
             }).ToList() : new List<UserTaggedPost>();
             return dtoPost;
@@ -66,16 +66,25 @@ namespace fakeLook_starter.Repositories
             string utpPattern = @"@\S+";
             var description = item.Description;
             //Regex tagRegex = new Regex(tagPattern);
-            ICollection<Tag> tags =new List<Tag>();
+            ICollection<Tag> tags = new List<Tag>();
+            ICollection<Tag> tempTags = new List<Tag>();
             ICollection<UserTaggedPost> userTaggedPosts = new List<UserTaggedPost>();
             var matchTag = Regex.Matches(description, tagPattern);
 
             var matchUtp = Regex.Matches(description, utpPattern);
             for (int i = 0; i < matchTag.Count; i++)
             {
-               Tag tag =new Tag();
-                tag.Content = matchTag[i].Value.Remove(0,1);
-                tags.Add(tag);
+                Tag tag;
+                tag = _tagRepository.isTagExist(matchTag[i].Value.Remove(0, 1));
+                if (tag == null)
+                    tag = new Tag();
+                 tag.Content = matchTag[i].Value.Remove(0, 1);
+                if (_tagRepository.isTagExist(tag.Content) == null)
+                    tags.Add(tag);
+                else
+                    tempTags.Add(tag);
+                // tags.Add(await _tagRepository.Add(tag));
+
             }
             for (int i = 0; i < matchUtp.Count; i++)
             {
@@ -83,22 +92,25 @@ namespace fakeLook_starter.Repositories
                 if (u == null)
                     continue;
 
-             //   UserTaggedPost utp = new UserTaggedPost();
-                  //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
+                //   UserTaggedPost utp = new UserTaggedPost();
+                //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
                 //  tags.Add(await _tagRepository.Add(tag));
                 UserTaggedPost userTaggedPost = new UserTaggedPost();
                 //userTaggedPost = _userTaggedPostRepository.GetById(u.Id);
                 userTaggedPost.UserId = u.Id;
                 userTaggedPosts.Add(userTaggedPost);
-             
+
 
             }
-            item.Tags = tags;
+            if (tags.Count > 0)
+                item.Tags = tags;
+            else
+                item.Tags = tempTags;
             item.UserTaggedPost = userTaggedPosts;
             var res = _context.Posts.Add(item);
-            
-            
-           
+
+
+
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoPost(res.Entity);
         }
@@ -123,7 +135,7 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Users.Where(u => u.Id == id).FirstOrDefault().UserName;
         }
-      
+
         public Post GetById(int id)
         {
             return _context.Posts.Include(p => p.User)
@@ -140,13 +152,13 @@ namespace fakeLook_starter.Repositories
                    .Include(p => p.Comments).ThenInclude(c => c.User)
                    .Include(l => l.Likes.Where(l => l.IsActive)).ThenInclude(u => u.User)
                    .Include(p => p.Tags)
-                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User)
+                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User).OrderByDescending(p=>p.Date)
                    .Select(dtoLogic).ToList();
         }
 
         public ICollection<Post> GetByPredicate(Func<Post, bool> predicate)
         {
-            return _context.Posts.Include(p=>p.UserTaggedPost).Include(p=>p.User).Include(p=>p.Tags).Where(predicate).Select(dtoLogic).ToList();
+            return _context.Posts.Include(p => p.UserTaggedPost).Include(p => p.User).Include(p => p.Tags).Where(predicate).OrderByDescending(p=>p.Date).Select(dtoLogic).ToList();
         }
 
         public async Task<Post> Delete(int id)
