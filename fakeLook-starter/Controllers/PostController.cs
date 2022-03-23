@@ -61,8 +61,11 @@ namespace fakeLook_starter.Controllers
      
         // PUT api/<PostController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        public async Task<JsonResult> Put(int id, [FromBody] Post post)
         {
+            return new JsonResult(await _repository.Edit(post));
+
         }
 
         // DELETE api/<PostController>/5
@@ -76,11 +79,11 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Filter")]
-        //[TypeFilter(typeof(GetUserActionFilter))]
-        public async Task<JsonResult> Filter([FromBody] Filter filter)
+        [TypeFilter(typeof(GetUserActionFilter))]
+        public JsonResult Filter([FromBody] Filter filter)
         {
             
-            var res = _repository.GetByPredicate(post =>
+            var res =  _repository.GetByPredicate(post =>
             {
                 bool date = FilterByDate(post.Date, filter.DateFrom, filter.DateTo);
                 bool publishers = FilterByPublisher(post.UserId, filter.Publishers);
@@ -90,7 +93,8 @@ namespace fakeLook_starter.Controllers
                 return date && publishers && tags && userTags;
 
             });
-            return new JsonResult(res);
+            //res[0].ImageSorce = "";
+            return new JsonResult(  res);
         }
         bool FilterByDate(DateTime postDate, DateTime? dateFrom, DateTime? dateTo)
         {
@@ -125,7 +129,7 @@ namespace fakeLook_starter.Controllers
             {
                 foreach (string tagName in tags)
                 {
-                    if (tag.Content == tagName)
+                    if (tag.Content.Contains(tagName))
                         return true;
 
                 }
@@ -145,7 +149,7 @@ namespace fakeLook_starter.Controllers
 
                 foreach (string tagName in tags)
                 {
-                    if (userName == tagName)
+                    if (userName.Contains(tagName))
                         return true;
 
                 }

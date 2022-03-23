@@ -32,30 +32,30 @@ namespace fakeLook_starter.Repositories
         {
             var dtoPost = _dtoConverter.DtoPost(p);
             dtoPost.User = _dtoConverter.DtoUser(p.User);
-            dtoPost.Comments = p.Comments.Select(c =>
+            dtoPost.Comments = p.Comments!=null?p.Comments.Select(c =>
             {
                 var dtoComment = _dtoConverter.DtoComment(c);
                 dtoComment.User = _dtoConverter.DtoUser(c.User);
                 return dtoComment;
-            }).ToList();
-            dtoPost.Likes = p.Likes.Select(l =>
+            }).ToList():new List<Comment>();
+            dtoPost.Likes = p.Likes != null ? p.Likes.Select(l =>
             {
                 var dtoLike = _dtoConverter.DtoLike(l);
                 dtoLike.User = _dtoConverter.DtoUser(l.User);
                 return dtoLike;
-            }).ToList();
-            dtoPost.Tags = p.Tags.Select(t =>
+            }).ToList() : new List<Like>();
+            dtoPost.Tags = p.Tags != null ?p.Tags.Select(t =>
             {
                 var dtoTag = _dtoConverter.DtoTag(t);
 
                 return dtoTag;
-            }).ToList();
-            dtoPost.UserTaggedPost = p.UserTaggedPost.Select(t =>
+            }).ToList(): new List<Tag>();
+            dtoPost.UserTaggedPost = p.Tags != null ? p.UserTaggedPost.Select(t =>
             {
                 var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
                 dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
                 return dtoTaggedPost;
-            }).ToList();
+            }).ToList() : new List<UserTaggedPost>();
             return dtoPost;
         }
 
@@ -109,7 +109,11 @@ namespace fakeLook_starter.Repositories
             {
                 return null;//TODO
             }
+
+
+
             _context.Entry<Post>(temp).CurrentValues.SetValues(item);
+
             await _context.SaveChangesAsync();
             return _dtoConverter.DtoPost(item);
         }
@@ -141,7 +145,7 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetByPredicate(Func<Post, bool> predicate)
         {
-            return _context.Posts.Include(p=>p.UserTaggedPost).Include(p=>p.User).Include(p=>p.Tags).Where(predicate).ToList();
+            return _context.Posts.Include(p=>p.UserTaggedPost).Include(p=>p.User).Include(p=>p.Tags).Where(predicate).Select(dtoLogic).ToList();
         }
 
         public async Task<Post> Delete(int id)
