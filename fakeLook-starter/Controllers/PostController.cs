@@ -76,7 +76,8 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Filter")]
-        //[TypeFilter(typeof(GetUserActionFilter))]
+      //  [TypeFilter(typeof(GetUserActionFilter))]
+        //[Authorize]
         public async Task<JsonResult> Filter([FromBody] Filter filter)
         {
             
