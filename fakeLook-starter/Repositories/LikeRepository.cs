@@ -22,10 +22,15 @@ namespace fakeLook_starter.Repositories
 
         public async Task<Like> Add(Like item)
         {
-            item.IsActive = true;
-            var res = _context.Likes.Add(item);
-            await _context.SaveChangesAsync();
-            return _dtoConverter.DtoLike(res.Entity);
+            //if (_context.Likes.FirstOrDefault(l => l.UserId == item.UserId && l.PostId == item.PostId) != null)
+            //    return await RemoveLike(item.UserId, item.PostId);
+            //else
+            //{
+                item.IsActive = true;
+                var res = _context.Likes.Add(item);
+                await _context.SaveChangesAsync();
+                return _dtoConverter.DtoLike(res.Entity);
+            //}
         }
 
         private Like dtoLogic(Like l)

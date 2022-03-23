@@ -79,8 +79,10 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Filter")]
-        [TypeFilter(typeof(GetUserActionFilter))]
-        public JsonResult Filter([FromBody] Filter filter)
+      //  [TypeFilter(typeof(GetUserActionFilter))]
+        //[Authorize]
+        public async Task<JsonResult> Filter([FromBody] Filter filter)
+
         {
             
             var res =  _repository.GetByPredicate(post =>

@@ -46,6 +46,19 @@ namespace fakeLook_starter.Controllers
 
 
 
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public string ForgotPassword([FromBody] User user)
+        {
+            //TODO: check if user already exist
+
+            return  _repository.ForgotPassword(user.Email, user.Name);
+
+        }
+
+
+
+
         //[Authorize]
         //[HttpGet]
         //[Route("TestAll")]
