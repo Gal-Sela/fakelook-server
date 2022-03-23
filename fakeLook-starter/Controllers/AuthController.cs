@@ -48,11 +48,12 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("ForgotPassword")]
-        public string ForgotPassword([FromBody] User user)
+        public IActionResult ForgotPassword([FromBody] User user)
         {
             //TODO: check if user already exist
 
-            return  _repository.ForgotPassword(user.Email, user.Name);
+            var msg =   _repository.ForgotPassword(user.Email, user.Name);
+            return Ok(new {msg = msg});
 
         }
 

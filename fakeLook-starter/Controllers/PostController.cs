@@ -47,15 +47,28 @@ namespace fakeLook_starter.Controllers
        // [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Post([FromBody] Post post)
         {
-            var dbPost = await _repository.Add(post);
-            var dtoPost = new Post() {
-                Id = dbPost.Id, UserId = dbPost.UserId, Date = dbPost.Date,
-            Description = dbPost.Description, ImageSorce = dbPost.ImageSorce,
-                X_Position = dbPost.X_Position,
-                Y_Position = dbPost.Y_Position,
-                Z_Position = dbPost.Z_Position
-            };
+            try
+            {
+                var dbPost = await _repository.Add(post);
+                var dtoPost = new Post()
+                {
+                    Id = dbPost.Id,
+                    UserId = dbPost.UserId,
+                    Date = dbPost.Date,
+                    Description = dbPost.Description,
+                    ImageSorce = dbPost.ImageSorce,
+                    X_Position = dbPost.X_Position,
+                    Y_Position = dbPost.Y_Position,
+                    Z_Position = dbPost.Z_Position
+                };
                 return new JsonResult(dtoPost);
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex);
+
+            }
+
 
         }
      
