@@ -158,7 +158,15 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetByPredicate(Func<Post, bool> predicate)
         {
-            return _context.Posts.Include(p => p.UserTaggedPost).Include(p => p.User).Include(p => p.Tags).Where(predicate).OrderByDescending(p=>p.Date).Select(dtoLogic).ToList();
+            return _context.Posts.Include(p => p.UserTaggedPost)
+                                 .Include(p => p.User)
+                                 .Include(p => p.Tags)
+                                 .Include(p=>p.Comments).ThenInclude(c=>c.UserTaggedComment)
+                                 .Include(p=>p.Comments).ThenInclude(c=>c.Tags)
+                                 .Include(p=>p.Likes.Where(p => p.IsActive)).ThenInclude(u => u.User)
+                                 .Where(predicate)
+                                 .OrderByDescending(p=>p.Date)
+                                 .Select(dtoLogic).ToList();
         }
 
         public async Task<Post> Delete(int id)
