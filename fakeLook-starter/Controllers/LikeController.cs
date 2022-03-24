@@ -59,7 +59,7 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("IsCurrentUserLiked")]
-        //[TypeFilter(typeof(GetUserActionFilter))]
+        [TypeFilter(typeof(GetUserActionFilter))]
 
         public async Task<JsonResult> Post( int userId,  int postId)
         {
@@ -76,7 +76,7 @@ namespace fakeLook_starter.Controllers
 
         // DELETE api/<LikeController>/5
         [HttpDelete()]
-        //[TypeFilter(typeof(GetUserActionFilter))]
+        [TypeFilter(typeof(GetUserActionFilter))]
 
         public async Task<JsonResult> Delete( int userId,int postId)
         {

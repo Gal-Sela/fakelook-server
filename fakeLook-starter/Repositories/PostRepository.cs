@@ -53,8 +53,6 @@ namespace fakeLook_starter.Repositories
             dtoPost.UserTaggedPost = p.Tags != null ? p.UserTaggedPost.Select(t =>
             {
                 var dtoTaggedPost = _dtoConverter.DtoUserTaggedPost(t);
-                //dtoTaggedPost.User = _userRepository.GetById(p.UserId);
-                //dtoTaggedPost.User = _dtoConverter.DtoUser(t.User);
                 return dtoTaggedPost;
             }).ToList() : new List<UserTaggedPost>();
             return dtoPost;
@@ -65,7 +63,6 @@ namespace fakeLook_starter.Repositories
             string tagPattern = @"#\S+";
             string utpPattern = @"@\S+";
             var description = item.Description;
-            //Regex tagRegex = new Regex(tagPattern);
             ICollection<Tag> tags = new List<Tag>();
             ICollection<Tag> tempTags = new List<Tag>();
             ICollection<UserTaggedPost> userTaggedPosts = new List<UserTaggedPost>();
@@ -78,12 +75,12 @@ namespace fakeLook_starter.Repositories
                 tag = _tagRepository.isTagExist(matchTag[i].Value.Remove(0, 1));
                 if (tag == null)
                     tag = new Tag();
-                 tag.Content = matchTag[i].Value.Remove(0, 1);
+                tag.Content = matchTag[i].Value.Remove(0, 1);
                 if (_tagRepository.isTagExist(tag.Content) == null)
                     tags.Add(tag);
                 else
                     tempTags.Add(tag);
-                // tags.Add(await _tagRepository.Add(tag));
+
 
             }
             for (int i = 0; i < matchUtp.Count; i++)
@@ -92,11 +89,8 @@ namespace fakeLook_starter.Repositories
                 if (u == null)
                     continue;
 
-                //   UserTaggedPost utp = new UserTaggedPost();
-                //  utp.Id = _userTaggedPostRepository.GetIdByUserName(matchUtp[i].Value.Remove(0,1));
-                //  tags.Add(await _tagRepository.Add(tag));
                 UserTaggedPost userTaggedPost = new UserTaggedPost();
-                //userTaggedPost = _userTaggedPostRepository.GetById(u.Id);
+
                 userTaggedPost.UserId = u.Id;
                 userTaggedPosts.Add(userTaggedPost);
 
@@ -143,7 +137,7 @@ namespace fakeLook_starter.Repositories
                    .Include(p => p.Likes).ThenInclude(l => l.User)
                    .Include(p => p.Tags)
                    .Include(p => p.UserTaggedPost).ThenInclude(u => u.User)
-                  // .SingleOrDefault(p => p.Id == id);
+
                   .Select(dtoLogic).FirstOrDefault(p => p.Id == id);
         }
         public ICollection<Post> GetAll()
@@ -152,7 +146,7 @@ namespace fakeLook_starter.Repositories
                    .Include(p => p.Comments).ThenInclude(c => c.User)
                    .Include(l => l.Likes.Where(l => l.IsActive)).ThenInclude(u => u.User)
                    .Include(p => p.Tags)
-                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User).OrderByDescending(p=>p.Date)
+                   .Include(p => p.UserTaggedPost).ThenInclude(u => u.User).OrderByDescending(p => p.Date)
                    .Select(dtoLogic).ToList();
         }
 
@@ -161,11 +155,11 @@ namespace fakeLook_starter.Repositories
             return _context.Posts.Include(p => p.UserTaggedPost)
                                  .Include(p => p.User)
                                  .Include(p => p.Tags)
-                                 .Include(p=>p.Comments).ThenInclude(c=>c.UserTaggedComment)
-                                 .Include(p=>p.Comments).ThenInclude(c=>c.Tags)
-                                 .Include(p=>p.Likes.Where(p => p.IsActive)).ThenInclude(u => u.User)
+                                 .Include(p => p.Comments).ThenInclude(c => c.UserTaggedComment)
+                                 .Include(p => p.Comments).ThenInclude(c => c.Tags)
+                                 .Include(p => p.Likes.Where(p => p.IsActive)).ThenInclude(u => u.User)
                                  .Where(predicate)
-                                 .OrderByDescending(p=>p.Date)
+                                 .OrderByDescending(p => p.Date)
                                  .Select(dtoLogic).ToList();
         }
 

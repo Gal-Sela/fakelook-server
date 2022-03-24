@@ -18,18 +18,7 @@ namespace fakeLook_starter.Repositories
         private Tag dtoLogic(Tag t)
         {
             var dtoTag = _dtoConverter.DtoTag(t);
-            /*
-            dtoTag.Posts = t.Posts.Select(p =>
-            {
-                var dtoPost= _dtoConverter.DtoPost(p);
-                return dtoPost;
-            }).ToList();
-            dtoTag.Comments= t.Comments.Select(p => { 
-            var dtoComment= _dtoConverter.DtoComment(p);
-                return dtoComment;
-            }).ToList();*/
             return dtoTag;
-        
         }
         public TagRepository(DataContext context, IDtoConverter dtoConverter)
         {
@@ -38,7 +27,7 @@ namespace fakeLook_starter.Repositories
         }
         public async Task<Tag> Add(Tag item)
         {
-            //   Tag t = _context.Tags.FirstOrDefault(t => t.Content == item.Content);
+
             Tag tag = isTagExist(item.Content);
             if (tag != null)
                 return tag;
@@ -62,8 +51,8 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Tag> GetAll()
         {
-            return _context.Tags.Include(t=>t.Posts)
-                   .Include(t=>t.Comments)
+            return _context.Tags.Include(t => t.Posts)
+                   .Include(t => t.Comments)
                    .Select(dtoLogic).ToList();
 
         }
@@ -72,7 +61,7 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Tags.Include(t => t.Posts)
                    .Include(t => t.Comments)
-                   .Select(dtoLogic).FirstOrDefault(t=>t.Id==id);
+                   .Select(dtoLogic).FirstOrDefault(t => t.Id == id);
         }
 
         public ICollection<Tag> GetByPredicate(Func<Tag, bool> predicate)
@@ -82,8 +71,8 @@ namespace fakeLook_starter.Repositories
 
         public Tag isTagExist(string content)
         {
-            var tag = _context.Tags.Where(t=>t.Content == content).SingleOrDefault();
-            return tag ;
+            var tag = _context.Tags.Where(t => t.Content == content).SingleOrDefault();
+            return tag;
         }
     }
 }

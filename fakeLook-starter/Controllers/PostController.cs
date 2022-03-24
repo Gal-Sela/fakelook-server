@@ -35,8 +35,8 @@ namespace fakeLook_starter.Controllers
         [Route("GetAll")]
         public JsonResult GetAll()
         {
-           
-            
+
+
             return new JsonResult(_repository.GetAll());
         }
 
@@ -44,7 +44,7 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("Add")]
-       // [TypeFilter(typeof(GetUserActionFilter))]
+        [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<JsonResult> Post([FromBody] Post post)
         {
             try
@@ -71,7 +71,7 @@ namespace fakeLook_starter.Controllers
 
 
         }
-     
+
         // PUT api/<PostController>/5
         [HttpPut("{id}")]
 
@@ -87,46 +87,45 @@ namespace fakeLook_starter.Controllers
         public async Task<JsonResult> Delete(int id)
         {
             return new JsonResult(await _repository.Delete(id));
-                 
+
         }
 
         [HttpPost]
         [Route("Filter")]
-      //  [TypeFilter(typeof(GetUserActionFilter))]
+        [TypeFilter(typeof(GetUserActionFilter))]
         //[Authorize]
         public async Task<JsonResult> Filter([FromBody] Filter filter)
 
         {
-            
-            var res =  _repository.GetByPredicate(post =>
-            {
-                bool date = FilterByDate(post.Date, filter.DateFrom, filter.DateTo);
-                bool publishers = FilterByPublisher(post.UserId, filter.Publishers);
-                bool tags = FilterByTag(post.Tags, filter.Tags);
-                bool userTags = FilterByUserTagged(post.UserTaggedPost, filter.UsersTaggedInPost);
 
-                return date && publishers && tags && userTags;
+            var res = _repository.GetByPredicate(post =>
+           {
+               bool date = FilterByDate(post.Date, filter.DateFrom, filter.DateTo);
+               bool publishers = FilterByPublisher(post.UserId, filter.Publishers);
+               bool tags = FilterByTag(post.Tags, filter.Tags);
+               bool userTags = FilterByUserTagged(post.UserTaggedPost, filter.UsersTaggedInPost);
 
-            });
-            //res[0].ImageSorce = "";
-            return new JsonResult(  res);
+               return date && publishers && tags && userTags;
+
+           });
+
+            return new JsonResult(res);
         }
         bool FilterByDate(DateTime postDate, DateTime? dateFrom, DateTime? dateTo)
         {
             bool date;
-            if(dateFrom==null)
-                dateFrom=DateTime.MinValue;
+            if (dateFrom == null)
+                dateFrom = DateTime.MinValue;
             if (dateTo == null)
                 dateTo = DateTime.Now;
-       
-          //  {
-                date = postDate >= dateFrom && postDate <= dateTo;
-           // }
+
+            date = postDate >= dateFrom && postDate <= dateTo;
+
             return date;
         }
         bool FilterByPublisher(int userId, ICollection<string> userNames)
         {
-            if ( userNames.Count == 1)
+            if (userNames.Count == 1)
                 if (userNames.Contains(""))
                     return true;
 
@@ -138,7 +137,7 @@ namespace fakeLook_starter.Controllers
         {
             if (tags.Count == 1)
                 if (tags.Contains(""))
-                return true;
+                    return true;
 
             foreach (Tag tag in postTags)
             {
@@ -159,8 +158,8 @@ namespace fakeLook_starter.Controllers
                     return true;
             foreach (UserTaggedPost userTaggedPost in users)
             {
-               // var user= _userRepository.GetById(userTaggedPost.UserId);
-               var userName= _repository.GetUserNameByUserId(userTaggedPost.UserId);
+                
+                var userName = _repository.GetUserNameByUserId(userTaggedPost.UserId);
 
                 foreach (string tagName in tags)
                 {

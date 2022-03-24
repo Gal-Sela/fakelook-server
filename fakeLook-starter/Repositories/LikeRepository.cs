@@ -22,10 +22,7 @@ namespace fakeLook_starter.Repositories
 
         public async Task<Like> Add(Like item)
         {
-            //if (_context.Likes.FirstOrDefault(l => l.UserId == item.UserId && l.PostId == item.PostId) != null)
-            //    return await RemoveLike(item.UserId, item.PostId);
-            //else
-            //{
+
             if (!IsLikeExist(item.UserId, item.PostId))
             {
                 item.IsActive = true;
@@ -34,9 +31,9 @@ namespace fakeLook_starter.Repositories
                 return _dtoConverter.DtoLike(res.Entity);
             }
             else
-               return await ToggleIsActiveLike(item.PostId, item.UserId);
+                return await ToggleIsActiveLike(item.PostId, item.UserId);
 
-            //}
+
         }
 
         private Like dtoLogic(Like l)
@@ -73,7 +70,7 @@ namespace fakeLook_starter.Repositories
 
         public Like GetById(int id)
         {
-            return _context.Likes.SingleOrDefault(l=>l.Id == id);
+            return _context.Likes.SingleOrDefault(l => l.Id == id);
         }
 
         public ICollection<Like> GetByPredicate(Func<Like, bool> predicate)
@@ -93,13 +90,13 @@ namespace fakeLook_starter.Repositories
 
         public int GetNumberOfLikesByPostId(int postId)
         {
-            return _context.Likes.Where(p=>p.PostId == postId).Where(l=>l.IsActive).Count();
+            return _context.Likes.Where(p => p.PostId == postId).Where(l => l.IsActive).Count();
         }
 
-        public async Task<Like> ToggleIsActiveLike( int postId, int userId)
+        public async Task<Like> ToggleIsActiveLike(int postId, int userId)
         {
-            var like = _context.Likes.Where(l=>l.UserId==userId && l.PostId==postId).SingleOrDefault();
-          //  var like = GetById(likeId);
+            var like = _context.Likes.Where(l => l.UserId == userId && l.PostId == postId).SingleOrDefault();
+
             like.IsActive = !like.IsActive;
             await _context.SaveChangesAsync();
             return like;
@@ -107,7 +104,7 @@ namespace fakeLook_starter.Repositories
 
         public bool IsLikeExist(int userId, int postId)
         {
-            var x= (_context.Likes.SingleOrDefault(l=>l.UserId==userId && l.PostId==postId) != null);
+            var x = (_context.Likes.SingleOrDefault(l => l.UserId == userId && l.PostId == postId) != null);
             return x;
         }
     }
