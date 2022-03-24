@@ -22,8 +22,6 @@ namespace fakeLook_starter.Repositories
         private UserTaggedPost dtoLogic(UserTaggedPost u)
         {
             var dtoUserTaggedPost = _dtoConverter.DtoUserTaggedPost(u);
-           // dtoUserTaggedPost.Post = _dtoConverter.DtoPost(u.Post);
-            //dtoUserTaggedPost.User = _dtoConverter.DtoUser(u.User);
             return dtoUserTaggedPost;
 
         }

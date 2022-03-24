@@ -28,14 +28,14 @@ namespace fakeLook_starter.Repositories
         private Comment dtoLogic(Comment c)
         {
             var dtoComment = _dtoConverter.DtoComment(c);
-            dtoComment.User= _dtoConverter.DtoUser(c.User);
-            dtoComment.Post=_dtoConverter.DtoPost(c.Post);
-            dtoComment.Tags=c.Tags.Select(t =>
-            {
-                var dtoTag = _dtoConverter.DtoTag(t);
+            dtoComment.User = _dtoConverter.DtoUser(c.User);
+            dtoComment.Post = _dtoConverter.DtoPost(c.Post);
+            dtoComment.Tags = c.Tags.Select(t =>
+              {
+                  var dtoTag = _dtoConverter.DtoTag(t);
 
-                return dtoTag;
-            }).ToList();
+                  return dtoTag;
+              }).ToList();
             dtoComment.UserTaggedComment = c.UserTaggedComment.Select(t =>
             {
                 var UserTaggedComment = _dtoConverter.DtoUserTaggedComment(t);
@@ -44,19 +44,13 @@ namespace fakeLook_starter.Repositories
             }).ToList();
             return dtoComment;
         }
-        //    public async Task<Comment> Add(Comment item)
-        //{
-        //    var res = _context.Comments.Add(item);
-        //    await _context.SaveChangesAsync();
-        //    return _dtoConverter.DtoComment(res.Entity);
-        //}
 
         public async Task<Comment> Add(Comment comment)
         {
             string tagPattern = @"#\S+";
             string utpPattern = @"@\S+";
             var description = comment.Content;
-            //Regex tagRegex = new Regex(tagPattern);
+
             ICollection<Tag> tags = new List<Tag>();
             ICollection<Tag> tempTags = new List<Tag>();
             ICollection<UserTaggedComment> userTaggedComments = new List<UserTaggedComment>();
@@ -69,7 +63,7 @@ namespace fakeLook_starter.Repositories
                 tag = _tagRepository.isTagExist(matchTag[i].Value.Remove(0, 1));
                 if (tag == null)
                     tag = new Tag();
-                 tag.Content = matchTag[i].Value.Remove(0, 1);
+                tag.Content = matchTag[i].Value.Remove(0, 1);
                 if (_tagRepository.isTagExist(tag.Content) == null)
                     tags.Add(tag);
                 else
@@ -116,7 +110,7 @@ namespace fakeLook_starter.Repositories
         public ICollection<Comment> GetAll()
         {
             return _context.Comments.Include(u => u.User)
-                   .Include(p=>p.Post).ThenInclude(u=>u.User)
+                   .Include(p => p.Post).ThenInclude(u => u.User)
                   .Include(t => t.Tags)
                   .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
                   .Select(dtoLogic).ToList();
@@ -128,7 +122,7 @@ namespace fakeLook_starter.Repositories
                    .Include(p => p.Post).ThenInclude(u => u.User)
                   .Include(t => t.Tags)
                   .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
-                  .Select(dtoLogic).FirstOrDefault(c=>c.Id== id);
+                  .Select(dtoLogic).FirstOrDefault(c => c.Id == id);
         }
 
         public ICollection<Comment> GetByPredicate(Func<Comment, bool> predicate)
@@ -138,8 +132,8 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Comment> GetAllComentsByPostId(int postId)
         {
-            return _context.Comments.Where(p=>p.PostId== postId).Include(u => u.User)
-                             .Include(p=>p.Post)
+            return _context.Comments.Where(p => p.PostId == postId).Include(u => u.User)
+                             .Include(p => p.Post)
                              .Include(t => t.Tags)
                              .Include(utc => utc.UserTaggedComment).ThenInclude(u => u.User)
                              .Select(dtoLogic).ToList();

@@ -22,23 +22,16 @@ namespace fakeLook_starter.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            //return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetAll());
-              
+
         }
         [HttpGet]
         [Route("GetById")]
         public JsonResult Get(int id)
         {
-            // return new string[] { "value1", "value2" };
             return new JsonResult(_repository.GetById(id));
         }
-        // GET api/<TagController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+
 
         // POST api/<TagController>
         [HttpPost]
@@ -46,7 +39,7 @@ namespace fakeLook_starter.Controllers
         public async Task<JsonResult> Post([FromBody] Tag tag)
         {
             var dbTag = await _repository.Add(tag);
-            var dtoTag = new Tag() { Id = dbTag.Id,Content=dbTag.Content };
+            var dtoTag = new Tag() { Id = dbTag.Id, Content = dbTag.Content };
             return new JsonResult(dtoTag);
         }
 
