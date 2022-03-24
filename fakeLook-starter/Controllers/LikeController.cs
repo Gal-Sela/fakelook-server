@@ -50,8 +50,8 @@ namespace fakeLook_starter.Controllers
             return new JsonResult(dtoLike);
         }
         [HttpPost]
-        [Route("RemoveLike")]
-        public async Task<JsonResult> RemoveLike([FromBody] Like like)
+        [Route("ToggleIsActiveLike")]
+        public async Task<JsonResult> ToggleIsActiveLike([FromBody] Like like)
         {
 
             return new JsonResult(await _repository.ToggleIsActiveLike(like.PostId, like.UserId));
